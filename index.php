@@ -27,7 +27,7 @@
     <tbody>
       <?php
       // Establecer conexión con la base de datos
-      $servername = "localhost";
+      $servername = "44.217.158.224";
       $username = "cevallos";
       $password = "cevallos123";
       $dbname = "tienda";
