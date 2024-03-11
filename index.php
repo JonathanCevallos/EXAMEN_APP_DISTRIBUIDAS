@@ -28,9 +28,9 @@
       <?php
       // Establecer conexión con la base de datos
       $servername = "localhost";
-      $username = "tu_usuario";
-      $password = "tu_contraseña";
-      $dbname = "tu_base_de_datos";
+      $username = "cevallos";
+      $password = "cevallos123";
+      $dbname = "tienda";
 
       $conn = new mysqli($servername, $username, $password, $dbname);
 
