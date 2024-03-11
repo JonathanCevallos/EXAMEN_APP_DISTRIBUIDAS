@@ -1,87 +1,70 @@
-<?php
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista de Productos</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
 
-// Check PHP version.
-$minPhpVersion = '7.4'; // If you update this, don't forget to update `spark`.
-if (version_compare(PHP_VERSION, $minPhpVersion, '<')) {
-    $message = sprintf(
-        'Your PHP version must be %s or higher to run CodeIgniter. Current version: %s',
-        $minPhpVersion,
-        PHP_VERSION
-    );
+<div class="container mt-5">
+  <h2>Lista de Productos</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Categoría</th>
+        <th>Marca</th>
+        <th>Descripción</th>
+        <th>Precio</th>
+        <th>PVP</th>
+        <th>Impuesto</th>
+        <th>Foto</th>
+      </tr>
+    </thead>
+    <tbody>
+      <?php
+      // Establecer conexión con la base de datos
+      $servername = "localhost";
+      $username = "tu_usuario";
+      $password = "tu_contraseña";
+      $dbname = "tu_base_de_datos";
 
-    exit($message);
-}
+      $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Path to the front controller (this file)
-define('FCPATH', __DIR__ . DIRECTORY_SEPARATOR);
+      // Comprobar la conexión
+      if ($conn->connect_error) {
+        die("Conexión fallida: " . $conn->connect_error);
+      }
 
-// Ensure the current directory is pointing to the front controller's directory
-if (getcwd() . DIRECTORY_SEPARATOR !== FCPATH) {
-    chdir(FCPATH);
-}
+      // Consulta SQL para obtener los datos de la tabla producto
+      $sql = "SELECT * FROM producto";
+      $result = $conn->query($sql);
 
-/*
- *---------------------------------------------------------------
- * BOOTSTRAP THE APPLICATION
- *---------------------------------------------------------------
- * This process sets up the path constants, loads and registers
- * our autoloader, along with Composer's, loads our constants
- * and fires up an environment-specific bootstrapping.
- */
+      if ($result->num_rows > 0) {
+        // Mostrar los datos de cada fila
+        while($row = $result->fetch_assoc()) {
+          echo "<tr>";
+          echo "<td>".$row['id']."</td>";
+          echo "<td>".$row['idcategoria']."</td>";
+          echo "<td>".$row['idmarca']."</td>";
+          echo "<td>".$row['descripcion']."</td>";
+          echo "<td>".$row['precio']."</td>";
+          echo "<td>".$row['pvp']."</td>";
+          echo "<td>".$row['impuesto']."</td>";
+          echo "<td><img src='".$row['foto']."' alt='Foto' style='max-width:100px; max-height:100px;'></td>";
+          echo "</tr>";
+        }
+      } else {
+        echo "0 resultados";
+      }
+      $conn->close();
+      ?>
+    </tbody>
+  </table>
+</div>
 
-// Load our paths config file
-// This is the line that might need to be changed, depending on your folder structure.
-require FCPATH . 'app/Config/Paths.php';
-// ^^^ Change this line if you move your application folder
-
-$paths = new Config\Paths();
-
-// Location of the framework bootstrap file.
-require rtrim($paths->systemDirectory, '\\/ ') . DIRECTORY_SEPARATOR . 'bootstrap.php';
-
-// Load environment settings from .env files into $_SERVER and $_ENV
-require_once SYSTEMPATH . 'Config/DotEnv.php';
-(new CodeIgniter\Config\DotEnv(ROOTPATH))->load();
-
-// Define ENVIRONMENT
-if (! defined('ENVIRONMENT')) {
-    define('ENVIRONMENT', env('CI_ENVIRONMENT', 'production'));
-}
-
-// Load Config Cache
-// $factoriesCache = new \CodeIgniter\Cache\FactoriesCache();
-// $factoriesCache->load('config');
-// ^^^ Uncomment these lines if you want to use Config Caching.
-
-/*
- * ---------------------------------------------------------------
- * GRAB OUR CODEIGNITER INSTANCE
- * ---------------------------------------------------------------
- *
- * The CodeIgniter class contains the core functionality to make
- * the application run, and does all the dirty work to get
- * the pieces all working together.
- */
-
-$app = Config\Services::codeigniter();
-$app->initialize();
-$context = is_cli() ? 'php-cli' : 'web';
-$app->setContext($context);
-
-/*
- *---------------------------------------------------------------
- * LAUNCH THE APPLICATION
- *---------------------------------------------------------------
- * Now that everything is set up, it's time to actually fire
- * up the engines and make this app do its thang.
- */
-
-$app->run();
-
-// Save Config Cache
-// $factoriesCache->save('config');
-// ^^^ Uncomment this line if you want to use Config Caching.
-
-// Exits the application, setting the exit code for CLI-based applications
-// that might be watching.
-exit(EXIT_SUCCESS);
+</body>
+</html>
